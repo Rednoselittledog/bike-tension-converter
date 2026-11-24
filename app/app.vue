@@ -17,9 +17,9 @@ const result = computed(() => mode.value === 'tension'
   ? calculateGaugeReading(numericInput.value, calibration.value)
   : calculateTension(numericInput.value, calibration.value))
 const errorMessage = computed(() => {
-  if (inputValue.value === '') return 'กรอกค่าที่ต้องการแปลง'
-  if (!Number.isFinite(numericInput.value)) return 'กรุณากรอกตัวเลข'
-  return result.value === null ? `รุ่นนี้รองรับ ${formatValue(inputRange.value.min)}–${formatValue(inputRange.value.max)} ${inputUnit.value}` : ''
+  if (inputValue.value === '') return 'Enter a value to convert'
+  if (!Number.isFinite(numericInput.value)) return 'Please enter a number'
+  return result.value === null ? `Supported range: ${formatValue(inputRange.value.min)}–${formatValue(inputRange.value.max)} ${inputUnit.value}` : ''
 })
 
 function flipDirection() {
@@ -53,7 +53,7 @@ function handleInput() {
           </div>
           <p id="range-hint" class="help-text">{{ formatValue(inputRange.min) }}–{{ formatValue(inputRange.max) }} {{ inputUnit }}</p>
         </div>
-        <button class="flip-button" type="button" aria-label="สลับทิศทางการแปลง" @click="flipDirection">⇄<span>สลับ</span></button>
+        <button class="flip-button" type="button" aria-label="Swap conversion direction" @click="flipDirection">⇄<span>Swap</span></button>
         <output class="result" :class="{ invalid: result === null }" aria-live="polite">
           <span>{{ outputLabel }}</span>
           <strong v-if="result !== null">{{ formatValue(result) }}</strong><strong v-else>—</strong>

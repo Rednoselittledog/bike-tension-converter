@@ -4,7 +4,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   app: {
     head: {
-      htmlAttrs: { lang: 'th' },
+      htmlAttrs: { lang: 'en' },
       title: 'Spoke tension converter',
       meta: [
         { name: 'description', content: 'Convert bicycle spoke gauge readings and tension.' },
