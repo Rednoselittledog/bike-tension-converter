@@ -22,9 +22,16 @@ test('round-trips tension through the inverse without losing precision', () => {
   assert.ok(Math.abs(calculateTension(gaugeReading, calibration) - 100) < 0.000001)
 })
 
-test('rejects values outside the calibration range', () => {
-  assert.equal(calculateTension(2.51, calibration), null)
-  assert.equal(calculateGaugeReading(151, calibration), null)
+test('extrapolates outside the calibration range', () => {
+  assert.ok(calculateTension(2.51, calibration) < 50)
+  const gaugeReading = calculateGaugeReading(160, calibration)
+  assert.ok(gaugeReading > calibration.gaugeRange.max)
+  assert.ok(Math.abs(calculateTension(gaugeReading, calibration) - 160) < 0.000001)
+})
+
+test('returns null only when the curve has no answer', () => {
+  assert.equal(calculateGaugeReading(20, calibration), null)
+  assert.equal(calculateTension(Number.NaN, calibration), null)
 })
 
 test('stores calibration metadata independently from the calculation', () => {

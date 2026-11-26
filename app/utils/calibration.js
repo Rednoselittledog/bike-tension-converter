@@ -14,26 +14,20 @@ export const CALIBRATIONS = [{
   sourceGaugeRange: { min: 2.52, max: 3.9 },
 }]
 
-function isWithinRange(value, range) {
-  return Number.isFinite(value) && value >= range.min && value <= range.max
-}
-
+// No range limits: values outside tensionRange/gaugeRange are extrapolated from the curve.
 export function calculateTension(gaugeReading, calibration) {
-  if (!isWithinRange(gaugeReading, calibration.gaugeRange)) return null
+  if (!Number.isFinite(gaugeReading)) return null
   const { a, b, c } = calibration.coefficients
   return a * gaugeReading ** 2 + b * gaugeReading + c
 }
 
 export function calculateGaugeReading(tension, calibration) {
-  if (!isWithinRange(tension, calibration.tensionRange)) return null
+  if (!Number.isFinite(tension)) return null
   const { a, b, c } = calibration.coefficients
   const discriminant = b ** 2 - 4 * a * (c - tension)
   if (discriminant < 0) return null
-  const roots = [
-    (-b - Math.sqrt(discriminant)) / (2 * a),
-    (-b + Math.sqrt(discriminant)) / (2 * a),
-  ]
-  return roots.find(root => isWithinRange(root, calibration.gaugeRange)) ?? null
+  // Larger root = the rising branch of the curve, where real gauge readings live (a > 0).
+  return (-b + Math.sqrt(discriminant)) / (2 * a)
 }
 
 export function formatValue(value, digits = 2) {

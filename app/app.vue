@@ -19,7 +19,7 @@ const result = computed(() => mode.value === 'tension'
 const errorMessage = computed(() => {
   if (inputValue.value === '') return 'Enter a value to convert'
   if (!Number.isFinite(numericInput.value)) return 'Please enter a number'
-  return result.value === null ? `Supported range: ${formatValue(inputRange.value.min)}–${formatValue(inputRange.value.max)} ${inputUnit.value}` : ''
+  return result.value === null ? 'No gauge reading matches this tension' : ''
 })
 
 function flipDirection() {
@@ -48,10 +48,10 @@ function handleInput() {
         <div class="field-group">
           <label for="source-value">{{ inputLabel }}</label>
           <div class="number-input">
-            <input id="source-value" v-model="inputValue" inputmode="decimal" type="number" step="0.01" :min="inputRange.min" :max="inputRange.max" :aria-describedby="errorMessage ? 'range-message' : 'range-hint'" @input="handleInput">
+            <input id="source-value" v-model="inputValue" inputmode="decimal" type="number" step="0.01" :aria-describedby="errorMessage ? 'range-message' : 'range-hint'" @input="handleInput">
             <span>{{ inputUnit }}</span>
           </div>
-          <p id="range-hint" class="help-text">{{ formatValue(inputRange.min) }}–{{ formatValue(inputRange.max) }} {{ inputUnit }}</p>
+          <p id="range-hint" class="help-text">Calibrated for {{ formatValue(inputRange.min) }}–{{ formatValue(inputRange.max) }} {{ inputUnit }}</p>
         </div>
         <button class="flip-button" type="button" aria-label="Swap conversion direction" @click="flipDirection">⇄<span>Swap</span></button>
         <output class="result" :class="{ invalid: result === null }" aria-live="polite">
